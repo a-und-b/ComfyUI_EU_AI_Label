@@ -47,7 +47,7 @@ class EUAILabelVisible:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "image": ("IMAGE", {"display_name": "Image"}),
+                "image": ("IMAGE", {"display_name": "Images"}),
                 "label_type": (["EU Icon", "Text", "Text + EU Icon", "Custom Logo"],
                                {"display_name": "Label Type"}),
                 "eu_icon_variant": (["AI", "AI generated", "AI modified"],
@@ -74,6 +74,7 @@ class EUAILabelVisible:
         }
 
     RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("Images",)
     FUNCTION = "apply"
     CATEGORY = CATEGORY
     DESCRIPTION = ("Composites a visible AI-transparency label (official EU icon, text or "
@@ -197,13 +198,13 @@ class EUAILabelMetadataCheck:
                     "Metadata Writer here for a round-trip check."}),
             },
             "optional": {
-                "image": ("IMAGE", {"display_name": "Image",
+                "image": ("IMAGE", {"display_name": "Images",
                                     "tooltip": "Optional passthrough"}),
             },
         }
 
     RETURN_TYPES = ("STRING", "STRING", "IMAGE")
-    RETURN_NAMES = ("Report", "JSON", "Image")
+    RETURN_NAMES = ("Report", "JSON", "Images")
     OUTPUT_NODE = True
     FUNCTION = "check"
     CATEGORY = CATEGORY
