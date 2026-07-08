@@ -1,0 +1,14 @@
+[project]
+name = "eu_ai_label"
+description = "Label AI-generated images per Art. 50 EU AI Act: visible EU icon/text overlay, XMP metadata (IPTC DigitalSourceType) writer with save, and a metadata inspector incl. C2PA detection."
+version = "1.0.0"
+license = { file = "LICENSE" }
+dependencies = ["Pillow>=9.1", "numpy"]
+
+[project.urls]
+Repository = "https://github.com/a-und-b/ComfyUI_EU_AI_Label"
+
+[tool.comfy]
+PublisherId = "a-und-b"
+DisplayName = "ComfyUI_EU_AI_Label"
+Icon = ""

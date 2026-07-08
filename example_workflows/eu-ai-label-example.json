@@ -1,0 +1,426 @@
+{
+ "id": "00000000-0000-0000-0000-000000000000",
+ "revision": 0,
+ "last_node_id": 4,
+ "last_link_id": 3,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "LoadImage",
+   "pos": [
+    80,
+    300
+   ],
+   "size": [
+    282.796875,
+    340
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "choose file to upload",
+     "name": "upload",
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      1
+     ]
+    },
+    {
+     "localized_name": "MASK",
+     "name": "MASK",
+     "type": "MASK",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ]
+  },
+  {
+   "id": 2,
+   "type": "EUAILabelVisible",
+   "pos": [
+    480,
+    300
+   ],
+   "size": [
+    270,
+    356
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "link": 1
+    },
+    {
+     "localized_name": "custom_logo",
+     "name": "custom_logo",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": null
+    },
+    {
+     "localized_name": "label_type",
+     "name": "label_type",
+     "type": "COMBO",
+     "widget": {
+      "name": "label_type"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "eu_icon_variant",
+     "name": "eu_icon_variant",
+     "type": "COMBO",
+     "widget": {
+      "name": "eu_icon_variant"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "color_variant",
+     "name": "color_variant",
+     "type": "COMBO",
+     "widget": {
+      "name": "color_variant"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "custom_text",
+     "name": "custom_text",
+     "type": "STRING",
+     "widget": {
+      "name": "custom_text"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "size",
+     "name": "size",
+     "type": "FLOAT",
+     "widget": {
+      "name": "size"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "margin",
+     "name": "margin",
+     "type": "FLOAT",
+     "widget": {
+      "name": "margin"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "opacity",
+     "name": "opacity",
+     "type": "FLOAT",
+     "widget": {
+      "name": "opacity"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "position",
+     "name": "position",
+     "type": "COMBO",
+     "widget": {
+      "name": "position"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      2
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "EUAILabelVisible"
+   },
+   "widgets_values": [
+    "EU Icon",
+    "AI generated",
+    "white",
+    "KI-generiert",
+    7,
+    3,
+    100,
+    "bottom right"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "EUAILabelMetadataSave",
+   "pos": [
+    900,
+    300
+   ],
+   "size": [
+    400,
+    452
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 2
+    },
+    {
+     "localized_name": "digital_source_type",
+     "name": "digital_source_type",
+     "type": "COMBO",
+     "widget": {
+      "name": "digital_source_type"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "description",
+     "name": "description",
+     "type": "STRING",
+     "widget": {
+      "name": "description"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "creator_tool",
+     "name": "creator_tool",
+     "type": "STRING",
+     "widget": {
+      "name": "creator_tool"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "credit",
+     "name": "credit",
+     "type": "STRING",
+     "widget": {
+      "name": "credit"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "custom_xmp_fields",
+     "name": "custom_xmp_fields",
+     "type": "STRING",
+     "widget": {
+      "name": "custom_xmp_fields"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "embed_workflow",
+     "name": "embed_workflow",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "embed_workflow"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "format",
+     "name": "format",
+     "type": "COMBO",
+     "widget": {
+      "name": "format"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "jpeg_quality",
+     "name": "jpeg_quality",
+     "type": "INT",
+     "widget": {
+      "name": "jpeg_quality"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "filename_suffix",
+     "name": "filename_suffix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_suffix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "file_path",
+     "name": "file_path",
+     "type": "STRING",
+     "links": [
+      3
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "EUAILabelMetadataSave"
+   },
+   "widgets_values": [
+    "trainedAlgorithmicMedia (fully AI-generated)",
+    "Enth\u00e4lt KI-generierte Inhalte \u2014 Kennzeichnung gem\u00e4\u00df Art. 50 EU AI Act.",
+    "ComfyUI",
+    "",
+    "",
+    true,
+    "PNG",
+    92,
+    "ComfyUI",
+    "_ai-labeled"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "EUAILabelMetadataCheck",
+   "pos": [
+    1380,
+    300
+   ],
+   "size": [
+    298.625,
+    132
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "image",
+     "name": "image",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": null
+    },
+    {
+     "localized_name": "file_path",
+     "name": "file_path",
+     "type": "STRING",
+     "widget": {
+      "name": "file_path"
+     },
+     "link": 3
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "report",
+     "name": "report",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "json",
+     "name": "json",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "image",
+     "name": "image",
+     "type": "IMAGE",
+     "links": null
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "EUAILabelMetadataCheck"
+   },
+   "widgets_values": [
+    ""
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   1,
+   0,
+   2,
+   0,
+   "IMAGE"
+  ],
+  [
+   2,
+   2,
+   0,
+   3,
+   0,
+   "IMAGE"
+  ],
+  [
+   3,
+   3,
+   0,
+   4,
+   1,
+   "STRING"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 1,
+   "offset": [
+    0,
+    0
+   ]
+  }
+ },
+ "version": 0.4
+}
