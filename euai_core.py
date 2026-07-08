@@ -37,7 +37,11 @@ POSITIONS = [
 
 def load_icon(variant: str, color: str) -> Image.Image:
     path = os.path.join(ASSETS, "icons", ICON_FILES[variant].format(color=color))
-    return Image.open(path).convert("RGBA")
+    icon = Image.open(path).convert("RGBA")
+    # the official artwork ships with built-in clear-space padding around the
+    # icon; crop it so `size`/`margin` control the actual visible icon, not
+    # padding baked into the source file
+    return icon.crop(icon.getbbox())
 
 
 def render_text(text: str, color: str, font_size: int = 200) -> Image.Image:
@@ -60,12 +64,12 @@ def build_label(label_type: str, icon_variant: str, color: str,
     if label_type == "EU Icon":
         return load_icon(icon_variant, color)
     if label_type == "Text":
-        return render_text(custom_text or "KI-generiert", color)
+        return render_text(custom_text or "AI generated", color)
     if label_type == "Text + EU Icon":
         icon = load_icon(icon_variant, color)
         h = 240
         icon = icon.resize((round(icon.width * h / icon.height), h), LANCZOS)
-        text = render_text(custom_text or "KI-generiert", color, font_size=140)
+        text = render_text(custom_text or "AI generated", color, font_size=140)
         gap = h // 4
         out = Image.new("RGBA", (icon.width + gap + text.width, h), (0, 0, 0, 0))
         out.alpha_composite(icon, (0, 0))

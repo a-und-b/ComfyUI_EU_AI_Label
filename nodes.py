@@ -52,7 +52,7 @@ class EUAILabelVisible:
                 "eu_icon_variant": (["AI", "AI generated", "AI modified"],
                                     {"default": "AI generated"}),
                 "color_variant": (["black", "white"], {"default": "white"}),
-                "custom_text": ("STRING", {"default": "KI-generiert"}),
+                "custom_text": ("STRING", {"default": "AI generated"}),
                 "size": ("FLOAT", {"default": 7.0, "min": 1.0, "max": 100.0, "step": 0.5,
                                    "tooltip": "Label width in % of image width"}),
                 "margin": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 45.0, "step": 0.5,

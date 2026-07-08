@@ -115,4 +115,29 @@ def test_all_bundled_icons_load():
     for variant in core.ICON_FILES:
         for color in ("black", "white"):
             icon = core.load_icon(variant, color)
-            assert icon.mode == "RGBA" and icon.height == 900
+            assert icon.mode == "RGBA"
+            # cropped to content: no fully-transparent border row/column left
+            l, t, r, b = icon.getbbox()
+            assert (l, t) == (0, 0) and (r, b) == icon.size
+
+
+def test_margin_zero_places_label_flush_to_edge():
+    """A margin of 0% must put the label's own bounding box at the image edge,
+    not leave a gap from padding baked into the label artwork."""
+    base = Image.new("RGB", (1000, 1000), (0, 0, 0))
+    label = Image.new("RGBA", (100, 50), (255, 255, 255, 255))  # opaque, no padding
+    out = core.apply_label(base.copy(), label, size_pct=10, margin_pct=0,
+                           opacity_pct=100, position="bottom right")
+    import numpy as np
+    arr = np.asarray(out)
+    assert arr[-1, -1].tolist() == [255, 255, 255], \
+        "label should touch the bottom-right corner when margin=0"
+
+
+def test_load_icon_crops_builtin_padding():
+    """Bundled EU icon artwork ships with clear-space padding around the
+    icon; load_icon must trim it so size/margin control the visible icon,
+    not the padding baked into the source file."""
+    icon = core.load_icon("AI", "black")
+    l, t, r, b = icon.getbbox()
+    assert (l, t) == (0, 0) and (r, b) == icon.size
