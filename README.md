@@ -1,6 +1,9 @@
 # ComfyUI_EU_AI_Label
 
-**Label AI-generated images directly in your ComfyUI workflow — visible EU icon + machine-readable metadata, as required by Art. 50 EU AI Act (in force August 2, 2026).**
+**Label AI-generated images directly in your ComfyUI workflow with the official EU icon and machine-readable metadata, as required by Art. 50 EU AI Act (in force August 2, 2026).**
+
+<img width="2896" height="1084" alt="CleanShot 2026-07-08 at 20 43 56@2x" src="https://github.com/user-attachments/assets/94b59eb2-dcb6-4507-a781-a5ef25ab9bad" />
+
 
 Inspired by the browser tool [KI-Label Studio](https://label.marketing-ki.de/KI-Label-Studio.html), this node pack brings the same functionality into ComfyUI as the last step of every image generation:
 
@@ -20,11 +23,10 @@ pip install -r ComfyUI_EU_AI_Label/requirements.txt   # Pillow + numpy, usually 
 
 Restart ComfyUI. The nodes appear under the category **EU AI Label**. Works with both the legacy renderer and Nodes 2.0.
 
-An example workflow is included: [example_workflows/eu-ai-label-example.json](example_workflows/eu-ai-label-example.json) — `LoadImage → Visible Label → Metadata Writer & Save → Metadata Check`.
+An example workflow is included: [example_workflows/eu-ai-label-example.json](example_workflows/eu-ai-label-example.json)
 
-## ⚠️ The SaveImage trap
-
-**Do not chain a regular `SaveImage` node after the Metadata Writer.** ComfyUI image tensors cannot carry file metadata, and `SaveImage` writes its own metadata — your AI labeling would be lost. The **Metadata Writer & Save** node is a save node: it writes the file (with metadata) to your `output/` folder itself. No `SaveImage` needed. (Same pitfall as with [comfyui_c2pa_signer](https://github.com/mikecaronna/comfyui_c2pa_signer).)
+> [!CAUTION]
+> **Do not chain a regular `SaveImage` node after the Metadata Writer.** ComfyUI image tensors cannot carry file metadata, and `SaveImage` writes its own metadata. Your AI labeling metadata would be lost! The **Metadata Writer & Save** node is a save node: it writes the file (with metadata) to your `output/` folder itself. No `SaveImage` needed.
 
 ## Node reference
 
@@ -32,33 +34,34 @@ An example workflow is included: [example_workflows/eu-ai-label-example.json](ex
 
 Batch-capable. Composites the label with high-quality LANCZOS scaling, preserving the icon's aspect ratio.
 
-- **label_type**: `EU Icon` | `Text` | `Text + EU Icon` | `Custom Logo` (via the optional `custom_logo` image input)
-- **eu_icon_variant**: `AI` (base) | `AI generated` | `AI modified` — the three official EU icons, bundled in this repo
-- **color_variant**: `black` | `white` (the official 50 %-opacity variants are covered by the opacity slider)
-- **custom_text**: default `KI-generiert` (bundled DejaVu Sans font, free license)
-- **size**: label width in % of image width (default 7)
-- **margin**: distance to the edge in % of image width (default 3)
-- **opacity**: 1–100 % (default 100)
-- **position**: 9-point grid, default bottom right
+- **label_type:** <br/> `EU Icon` | `Text` | `Text + EU Icon` | `Custom Logo` (via the optional `custom_logo` image input)
+- **eu_icon_variant:** <br/> `AI` (base) | `AI generated` | `AI modified` (the three official EU icons)
+- **color_variant:** <br/> `black` | `white` (the official 50 %-opacity variants are covered by the opacity slider)
+- **custom_text:** <br/> Default `AI generated` (bundled DejaVu Sans font, free license)
+- **size:** <br/> Label width in % of image width (default 7)
+- **margin:** <br/> Distance to the edge in % of image width (default 3)
+- **opacity:** <br/> 1–100 % (default 100)
+- **position:** <br/> 9-point grid, default bottom right
 
 ### EU AI Label (Metadata Writer & Save)
 
-- **digital_source_type** — the [IPTC DigitalSourceType](https://cv.iptc.org/newscodes/digitalsourcetype/), the machine-readable AI marker that Google and others read:
-  - `trainedAlgorithmicMedia` — fully AI-generated
-  - `compositeWithTrainedAlgorithmicMedia` — AI-edited / composite
-  - `algorithmicMedia` — algorithmic without AI training
-  - `none` — do not set
-- **description** (`dc:description`), **creator_tool** (`xmp:CreatorTool`), **credit** (`photoshop:Credit`)
-- **custom_xmp_fields** — one `key=value` per line; known prefixes (`dc:`, `xmp:`, `photoshop:`, `Iptc4xmpExt:`) map to their namespaces, everything else goes into a package-specific namespace
-- **embed_workflow** — embeds the ComfyUI workflow/prompt like `SaveImage` does. **Privacy note: your prompts and node settings end up inside the image file.** Default on; PNG files remain drag-&-drop-restorable in ComfyUI, WebP via EXIF.
-- **format** `PNG` | `JPEG` | `WebP`, **jpeg_quality** (also used for WebP), **filename_prefix**/**filename_suffix** (default `_ai-labeled`)
-- Output **file_path** (STRING): the saved file path(s), one per line — wire it into the Check node for an immediate round-trip verification.
+- **digital_source_type:** <br/> [IPTC DigitalSourceType](https://cv.iptc.org/newscodes/digitalsourcetype/), the machine-readable AI marker that Google and others read:
+  - `trainedAlgorithmicMedia`: fully AI-generated
+  - `compositeWithTrainedAlgorithmicMedia`: AI-edited / composite
+  - `algorithmicMedia`: algorithmic without AI training
+  - `none`: do not set
+- **description:** <br/> (`dc:description`), **creator_tool** (`xmp:CreatorTool`), **credit** (`photoshop:Credit`)
+- **custom_xmp_fields:** <br/>  One `key=value` per line; known prefixes (`dc:`, `xmp:`, `photoshop:`, `Iptc4xmpExt:`) map to their namespaces, everything else goes into a package-specific namespace
+- **embed_workflow:** <br/> Embeds the ComfyUI workflow/prompt like `SaveImage` does. **Privacy note: your prompts and node settings end up inside the image file.** Default on; PNG files remain drag-&-drop-restorable in ComfyUI, WebP via EXIF.
+- **format:** <br/> `PNG` | `JPEG` | `WebP`, **jpeg_quality** (also used for WebP), **filename_prefix**/**filename_suffix** (default `_ai-labeled`)
+- Output **file_path** (STRING) <br/> The saved file path(s), one per line — wire it into the Check node for an immediate round-trip verification.
 
-**Implementation note:** the XMP packet is generated as RDF/XML and embedded natively via Pillow (PNG: `iTXt XML:com.adobe.xmp`, JPEG: APP1 segment, WebP: XMP chunk). We deliberately avoid `python-xmp-toolkit` (needs the exempi C library) and `pyexiv2` (binary wheels, platform issues) — zero extra dependencies, runs everywhere ComfyUI runs. No network access at runtime.
+> [!NOTE]
+> The XMP packet is generated as RDF/XML and embedded natively via Pillow (PNG: `iTXt XML:com.adobe.xmp`, JPEG: APP1 segment, WebP: XMP chunk). We deliberately avoid `python-xmp-toolkit` (needs the exempi C library) and `pyexiv2` (binary wheels, platform issues) — zero extra dependencies, runs everywhere ComfyUI runs. No network access at runtime.
 
 ### EU AI Label (Metadata Check)
 
-Answers: *"Is there AI labeling in this file already?"* Input is a **file path** (tensors carry no metadata; relative paths resolve against the ComfyUI output folder — or wire the Writer's `file_path` output straight in). Outputs a human-readable report and a JSON string; reads XMP (incl. `DigitalSourceType`), EXIF, IPTC-IIM and **detects C2PA manifests** (JPEG APP11/JUMBF, PNG `caBX`, WebP `C2PA` chunk). Detection only — signature verification and C2PA **signing** are out of scope (signing requires a certificate; planned as v2, see [comfyui_c2pa_signer](https://github.com/mikecaronna/comfyui_c2pa_signer) in the meantime).
+This node shows if there already is AI labeling in a file. Input is a **file path** (tensors carry no metadata; relative paths resolve against the ComfyUI output folder. Or wire the Writer's `file_path` output straight in). Outputs a human-readable report and a JSON string; reads XMP (incl. `DigitalSourceType`), EXIF, IPTC-IIM and **detects C2PA manifests** (JPEG APP11/JUMBF, PNG `caBX`, WebP `C2PA` chunk). Detection only — signature verification and C2PA **signing** are out of scope (signing requires a certificate; planned as v2, see [comfyui_c2pa_signer](https://github.com/mikecaronna/comfyui_c2pa_signer) in the meantime).
 
 ## Icon & font licenses
 
@@ -71,7 +74,7 @@ This tool does not constitute legal advice. Using the EU icons is voluntary; the
 
 ## Acknowledgements
 
-- [**uncanny minds GmbH**](https://marketing-ki.de/) — creators of [KI-Label Studio](https://label.marketing-ki.de/KI-Label-Studio.html), the browser tool this node pack's feature set is modeled on.
-- [**comfyui_c2pa_signer**](https://github.com/mikecaronna/comfyui_c2pa_signer) by mikecaronna — reference architecture for ComfyUI content-credential nodes, including the SaveImage-metadata pitfall this repo also documents.
-- **DejaVu Fonts project** (based on Bitstream Vera, designed by Jim Lyles/Bitstream, Inc.) — bundled `DejaVuSans.ttf`, see `assets/fonts/LICENSE-DejaVu.txt`.
-- **European Commission** — official EU AI-labeling icons, bundled under `assets/icons/`.
+- [**uncanny minds GmbH**](https://marketing-ki.de/) <br> The creators of [KI-Label Studio](https://label.marketing-ki.de/KI-Label-Studio.html), the browser tool this node pack's feature set is modeled on.
+- [**comfyui_c2pa_signer**](https://github.com/mikecaronna/comfyui_c2pa_signer) by mikecaronna <br> Reference architecture for ComfyUI content-credential nodes, including the SaveImage-metadata pitfall this repo also documents.
+- [**DejaVu Fonts project**](https://dejavu-fonts.github.io) (based on Bitstream Vera, designed by Jim Lyles/Bitstream, Inc.) <br> Bundled `DejaVuSans.ttf`, see `assets/fonts/LICENSE-DejaVu.txt`.
+- [**European Commission**](https://digital-strategy.ec.europa.eu/en/policies/eu-icons-labelling-ai-generated-content) <br> Official EU AI-labeling icons, bundled under `assets/icons/`.
