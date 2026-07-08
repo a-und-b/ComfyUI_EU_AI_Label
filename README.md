@@ -15,6 +15,18 @@ Inspired by the browser tool [KI-Label Studio](https://label.marketing-ki.de/KI-
 
 ## Installation
 
+### Via ComfyUI Manager (recommended)
+
+Search for `ComfyUI_EU_AI_Label` in [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) and click Install, then restart ComfyUI.
+
+### Via comfy-cli
+
+```bash
+comfy node install eu_ai_label
+```
+
+### Manual installation
+
 ```bash
 cd ComfyUI/custom_nodes
 git clone https://github.com/a-und-b/ComfyUI_EU_AI_Label.git
