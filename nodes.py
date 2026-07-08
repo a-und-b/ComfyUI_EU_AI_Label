@@ -47,21 +47,29 @@ class EUAILabelVisible:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "image": ("IMAGE",),
-                "label_type": (["EU Icon", "Text", "Text + EU Icon", "Custom Logo"],),
+                "image": ("IMAGE", {"display_name": "Image"}),
+                "label_type": (["EU Icon", "Text", "Text + EU Icon", "Custom Logo"],
+                               {"display_name": "Label Type"}),
                 "eu_icon_variant": (["AI", "AI generated", "AI modified"],
-                                    {"default": "AI generated"}),
-                "color_variant": (["black", "white"], {"default": "white"}),
-                "custom_text": ("STRING", {"default": "AI generated"}),
+                                    {"default": "AI generated",
+                                     "display_name": "EU Icon Variant"}),
+                "color_variant": (["black", "white"], {"default": "white",
+                                                       "display_name": "Color"}),
+                "custom_text": ("STRING", {"default": "AI generated",
+                                           "display_name": "Custom Text"}),
                 "size": ("FLOAT", {"default": 7.0, "min": 1.0, "max": 100.0, "step": 0.5,
+                                   "display_name": "Size (%)",
                                    "tooltip": "Label width in % of image width"}),
                 "margin": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 45.0, "step": 0.5,
+                                     "display_name": "Margin (%)",
                                      "tooltip": "Distance to the edge in % of image width"}),
-                "opacity": ("FLOAT", {"default": 100.0, "min": 1.0, "max": 100.0, "step": 1.0}),
-                "position": (core.POSITIONS, {"default": "bottom right"}),
+                "opacity": ("FLOAT", {"default": 100.0, "min": 1.0, "max": 100.0, "step": 1.0,
+                                      "display_name": "Opacity (%)"}),
+                "position": (core.POSITIONS, {"default": "bottom right",
+                                              "display_name": "Position"}),
             },
             "optional": {
-                "custom_logo": ("IMAGE",),
+                "custom_logo": ("IMAGE", {"display_name": "Custom Logo"}),
             },
         }
 
@@ -98,31 +106,40 @@ class EUAILabelMetadataSave:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE",),
+                "images": ("IMAGE", {"display_name": "Images"}),
                 "digital_source_type": (list(DST_CHOICES), {
+                    "display_name": "Digital Source Type",
                     "tooltip": "IPTC DigitalSourceType — the machine-readable AI marker "
                                "read by Google and others"}),
                 "description": ("STRING", {"multiline": True, "default":
-                    "Enthält KI-generierte Inhalte — Kennzeichnung gemäß Art. 50 EU AI Act."}),
-                "creator_tool": ("STRING", {"default": "ComfyUI"}),
-                "credit": ("STRING", {"default": ""}),
+                    "Enthält KI-generierte Inhalte — Kennzeichnung gemäß Art. 50 EU AI Act.",
+                    "display_name": "Description"}),
+                "creator_tool": ("STRING", {"default": "ComfyUI",
+                                            "display_name": "Creator Tool"}),
+                "credit": ("STRING", {"default": "", "display_name": "Credit"}),
                 "custom_xmp_fields": ("STRING", {"multiline": True, "default": "",
+                    "display_name": "Custom XMP Fields",
+                    "placeholder": "Custom XMP fields: key=value (one per line)",
                     "tooltip": "Optional: one key=value per line "
                                "(e.g. dc:rights=© 2026 Example GmbH)"}),
                 "embed_workflow": ("BOOLEAN", {"default": True,
+                    "display_name": "Embed Workflow",
                     "tooltip": "Embed the ComfyUI workflow/prompt in the file. "
                                "Privacy note: prompts and local paths end up in the image."}),
-                "format": (["PNG", "JPEG", "WebP"],),
+                "format": (["PNG", "JPEG", "WebP"], {"display_name": "Format"}),
                 "jpeg_quality": ("INT", {"default": 92, "min": 1, "max": 100,
+                                         "display_name": "Quality (JPEG/WebP)",
                                          "tooltip": "Quality for JPEG and WebP"}),
-                "filename_prefix": ("STRING", {"default": "ComfyUI"}),
-                "filename_suffix": ("STRING", {"default": "_ai-labeled"}),
+                "filename_prefix": ("STRING", {"default": "ComfyUI",
+                                               "display_name": "Filename Prefix"}),
+                "filename_suffix": ("STRING", {"default": "_ai-labeled",
+                                               "display_name": "Filename Suffix"}),
             },
             "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
         }
 
     RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("file_path",)
+    RETURN_NAMES = ("File Path",)
     OUTPUT_NODE = True
     FUNCTION = "save"
     CATEGORY = CATEGORY
@@ -171,18 +188,21 @@ class EUAILabelMetadataCheck:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "file_path": ("STRING", {"default": "", "tooltip":
+                "file_path": ("STRING", {"default": "",
+                    "display_name": "File Path",
+                    "tooltip":
                     "Path to the image file. Relative paths are resolved against the "
                     "ComfyUI output folder. Connect the file_path output of the "
                     "Metadata Writer here for a round-trip check."}),
             },
             "optional": {
-                "image": ("IMAGE", {"tooltip": "Optional passthrough"}),
+                "image": ("IMAGE", {"display_name": "Image",
+                                    "tooltip": "Optional passthrough"}),
             },
         }
 
     RETURN_TYPES = ("STRING", "STRING", "IMAGE")
-    RETURN_NAMES = ("report", "json", "image")
+    RETURN_NAMES = ("Report", "JSON", "Image")
     OUTPUT_NODE = True
     FUNCTION = "check"
     CATEGORY = CATEGORY

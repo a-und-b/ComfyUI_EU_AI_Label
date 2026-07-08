@@ -46,34 +46,34 @@ An example workflow is included: [example_workflows/eu-ai-label-example.json](ex
 
 Batch-capable. Composites the label with high-quality LANCZOS scaling, preserving the icon's aspect ratio.
 
-- **label_type:** <br/> `EU Icon` | `Text` | `Text + EU Icon` | `Custom Logo` (via the optional `custom_logo` image input)
-- **eu_icon_variant:** <br/> `AI` (base) | `AI generated` | `AI modified` (the three official EU icons)
-- **color_variant:** <br/> `black` | `white` (the official 50 %-opacity variants are covered by the opacity slider)
-- **custom_text:** <br/> Default `AI generated` (bundled DejaVu Sans font, free license)
-- **size:** <br/> Label width in % of image width (default 7)
-- **margin:** <br/> Distance to the edge in % of image width (default 3)
-- **opacity:** <br/> 1–100 % (default 100)
-- **position:** <br/> 9-point grid, default bottom right
+- **Label Type:** <br/> `EU Icon` | `Text` | `Text + EU Icon` | `Custom Logo` (via the optional `Custom Logo` image input)
+- **EU Icon Variant:** <br/> `AI` (base) | `AI generated` | `AI modified` (the three official EU icons)
+- **Color:** <br/> `black` | `white` (the official 50 %-opacity variants are covered by the opacity slider)
+- **Custom Text:** <br/> Default `AI generated` (bundled DejaVu Sans font, free license)
+- **Size (%):** <br/> Label width in % of image width (default 7)
+- **Margin (%):** <br/> Distance to the edge in % of image width (default 3)
+- **Opacity (%):** <br/> 1–100 % (default 100)
+- **Position:** <br/> 9-point grid, default bottom right
 
 ### EU AI Label (Metadata Writer & Save)
 
-- **digital_source_type:** <br/> [IPTC DigitalSourceType](https://cv.iptc.org/newscodes/digitalsourcetype/), the machine-readable AI marker that Google and others read:
+- **Digital Source Type:** <br/> [IPTC DigitalSourceType](https://cv.iptc.org/newscodes/digitalsourcetype/), the machine-readable AI marker that Google and others read:
   - `trainedAlgorithmicMedia`: fully AI-generated
   - `compositeWithTrainedAlgorithmicMedia`: AI-edited / composite
   - `algorithmicMedia`: algorithmic without AI training
   - `none`: do not set
-- **description:** <br/> (`dc:description`), **creator_tool** (`xmp:CreatorTool`), **credit** (`photoshop:Credit`)
-- **custom_xmp_fields:** <br/>  One `key=value` per line; known prefixes (`dc:`, `xmp:`, `photoshop:`, `Iptc4xmpExt:`) map to their namespaces, everything else goes into a package-specific namespace
-- **embed_workflow:** <br/> Embeds the ComfyUI workflow/prompt like `SaveImage` does. **Privacy note: your prompts and node settings end up inside the image file.** Default on; PNG files remain drag-&-drop-restorable in ComfyUI, WebP via EXIF.
-- **format:** <br/> `PNG` | `JPEG` | `WebP`, **jpeg_quality** (also used for WebP), **filename_prefix**/**filename_suffix** (default `_ai-labeled`)
-- Output **file_path** (STRING) <br/> The saved file path(s), one per line — wire it into the Check node for an immediate round-trip verification.
+- **Description:** <br/> (`dc:description`), **Creator Tool** (`xmp:CreatorTool`), **Credit** (`photoshop:Credit`)
+- **Custom XMP Fields:** <br/>  One `key=value` per line; known prefixes (`dc:`, `xmp:`, `photoshop:`, `Iptc4xmpExt:`) map to their namespaces, everything else goes into a package-specific namespace
+- **Embed Workflow:** <br/> Embeds the ComfyUI workflow/prompt like `SaveImage` does. **Privacy note: your prompts and node settings end up inside the image file.** Default on; PNG files remain drag-&-drop-restorable in ComfyUI, WebP via EXIF.
+- **Format:** <br/> `PNG` | `JPEG` | `WebP`, **Quality (JPEG/WebP)**, **Filename Prefix**/**Filename Suffix** (default `_ai-labeled`)
+- Output **File Path** (STRING) <br/> The saved file path(s), one per line — wire it into the Check node for an immediate round-trip verification.
 
 > [!NOTE]
 > The XMP packet is generated as RDF/XML and embedded natively via Pillow (PNG: `iTXt XML:com.adobe.xmp`, JPEG: APP1 segment, WebP: XMP chunk). We deliberately avoid `python-xmp-toolkit` (needs the exempi C library) and `pyexiv2` (binary wheels, platform issues) — zero extra dependencies, runs everywhere ComfyUI runs. No network access at runtime.
 
 ### EU AI Label (Metadata Check)
 
-This node shows if there already is AI labeling in a file. Input is a **file path** (tensors carry no metadata; relative paths resolve against the ComfyUI output folder. Or wire the Writer's `file_path` output straight in). Outputs a human-readable report and a JSON string; reads XMP (incl. `DigitalSourceType`), EXIF, IPTC-IIM and **detects C2PA manifests** (JPEG APP11/JUMBF, PNG `caBX`, WebP `C2PA` chunk). Detection only — signature verification and C2PA **signing** are out of scope (signing requires a certificate; planned as v2, see [comfyui_c2pa_signer](https://github.com/mikecaronna/comfyui_c2pa_signer) in the meantime).
+This node shows if there already is AI labeling in a file. Input is a **file path** (tensors carry no metadata; relative paths resolve against the ComfyUI output folder. Or wire the Writer's `File Path` output straight in). Outputs a human-readable report and a JSON string; reads XMP (incl. `DigitalSourceType`), EXIF, IPTC-IIM and **detects C2PA manifests** (JPEG APP11/JUMBF, PNG `caBX`, WebP `C2PA` chunk). Detection only — signature verification and C2PA **signing** are out of scope (signing requires a certificate; planned as v2, see [comfyui_c2pa_signer](https://github.com/mikecaronna/comfyui_c2pa_signer) in the meantime).
 
 ## Icon & font licenses
 
