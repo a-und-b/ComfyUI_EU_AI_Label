@@ -2,6 +2,9 @@
 
 **Label AI-generated images directly in your ComfyUI workflow with the official EU icon and machine-readable metadata, as required by Art. 50 EU AI Act (in force August 2, 2026).**
 
+<img width="2896" height="1084" alt="CleanShot 2026-07-08 at 20 43 56@2x" src="https://github.com/user-attachments/assets/94b59eb2-dcb6-4507-a781-a5ef25ab9bad" />
+
+
 Inspired by the browser tool [KI-Label Studio](https://label.marketing-ki.de/KI-Label-Studio.html), this node pack brings the same functionality into ComfyUI as the last step of every image generation:
 
 | Node | Purpose |
