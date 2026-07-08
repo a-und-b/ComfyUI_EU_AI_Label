@@ -1,7 +1,7 @@
 [project]
 name = "eu_ai_label"
 description = "Label AI-generated images per Art. 50 EU AI Act: visible EU icon/text overlay, XMP metadata (IPTC DigitalSourceType) writer with save, and a metadata inspector incl. C2PA detection."
-version = "1.0.0"
+version = "1.1.0"
 license = { file = "LICENSE" }
 dependencies = ["Pillow>=9.1", "numpy"]
 
