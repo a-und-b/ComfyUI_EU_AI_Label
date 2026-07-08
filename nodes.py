@@ -112,7 +112,8 @@ class EUAILabelMetadataSave:
                     "tooltip": "IPTC DigitalSourceType — the machine-readable AI marker "
                                "read by Google and others"}),
                 "description": ("STRING", {"multiline": True, "default":
-                    "Enthält KI-generierte Inhalte — Kennzeichnung gemäß Art. 50 EU AI Act.",
+                    "Contains AI-generated content — labeled in accordance with "
+                    "Art. 50 EU AI Act.",
                     "display_name": "Description"}),
                 "creator_tool": ("STRING", {"default": "ComfyUI",
                                             "display_name": "Creator Tool"}),

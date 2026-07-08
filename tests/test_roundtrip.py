@@ -16,7 +16,7 @@ def base_image():
 
 XMP_KW = dict(
     digital_source_type="trainedAlgorithmicMedia",
-    description="Enthält KI-generierte Inhalte — Kennzeichnung gemäß Art. 50 EU AI Act.",
+    description="Contains AI-generated content — labeled in accordance with Art. 50 EU AI Act.",
     creator_tool="ComfyUI",
     credit="a&b <Test> GmbH",
     custom_fields=core.parse_custom_fields("dc:rights=© 2026 Test\nmy key=value"),
