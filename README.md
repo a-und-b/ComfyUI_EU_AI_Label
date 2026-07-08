@@ -2,8 +2,6 @@
 
 **Label AI-generated images directly in your ComfyUI workflow — visible EU icon + machine-readable metadata, as required by Art. 50 EU AI Act (in force August 2, 2026).**
 
-*Deutsche Version siehe unten → [Deutsch](#deutsch)*
-
 Inspired by the browser tool [KI-Label Studio](https://label.marketing-ki.de/KI-Label-Studio.html), this node pack brings the same functionality into ComfyUI as the last step of every image generation:
 
 | Node | Purpose |
@@ -71,37 +69,9 @@ Answers: *"Is there AI labeling in this file already?"* Input is a **file path**
 
 This tool does not constitute legal advice. Using the EU icons is voluntary; the obligation to label AI-generated or AI-manipulated content ("deep fakes" in the broad sense) under Art. 50 EU AI Act remains with you as the user/provider. Whether and how specific content must be labeled depends on your individual case.
 
----
+## Acknowledgements
 
-<a name="deutsch"></a>
-# Deutsch
-
-**KI-generierte Bilder direkt im ComfyUI-Workflow kennzeichnen — sichtbares EU-Icon + maschinenlesbare Metadaten gemäß Art. 50 EU AI Act (gültig ab 2. August 2026).**
-
-Dieses Node-Pack bringt den Funktionsumfang des Browser-Tools [KI-Label Studio](https://label.marketing-ki.de/KI-Label-Studio.html) in ComfyUI — als letzter Schritt jeder Bildgenerierung. Fachlicher Hintergrund: [Kennzeichnungspflicht für KI-Bilder ab 2026](https://marketing-ki.de/aktuelles/ki-bilder-kennzeichnungspflicht-ab-2026/).
-
-## Installation
-
-```bash
-cd ComfyUI/custom_nodes
-git clone https://github.com/a-und-b/ComfyUI_EU_AI_Label.git
-pip install -r ComfyUI_EU_AI_Label/requirements.txt
-```
-
-ComfyUI neu starten — die Nodes erscheinen in der Kategorie **EU AI Label**. Beispiel-Workflow: `example_workflows/eu-ai-label-example.json`.
-
-## ⚠️ Die SaveImage-Falle
-
-**Nach dem Metadata Writer keinen normalen `SaveImage`-Node anschließen!** ComfyUI-Tensoren transportieren keine Datei-Metadaten, und `SaveImage` schreibt eigene Metadaten — die KI-Kennzeichnung ginge verloren. Der **Metadata Writer & Save** speichert selbst in den `output/`-Ordner.
-
-## Die drei Nodes
-
-1. **EU AI Label (Visible)** — brennt ein sichtbares Label ein: offizielles EU-Icon (drei Varianten: `AI`, `AI generated`, `AI modified`, jeweils schwarz/weiß), freier Text (Default „KI-generiert"), Text + Icon oder eigenes Logo. Größe/Rand in % der Bildbreite, Deckkraft, 9er-Positionsraster. Batch-fähig.
-2. **EU AI Label (Metadata Writer & Save)** — schreibt den IPTC `DigitalSourceType` (der Standard, den u. a. Google ausliest) plus Beschreibung, CreatorTool, Credit und eigene XMP-Felder; speichert als PNG/JPEG/WebP. Der `file_path`-Output lässt sich direkt in den Check-Node stecken. **Privacy-Hinweis:** `embed_workflow` bettet den kompletten Workflow (inkl. Prompts) in die Datei ein.
-3. **EU AI Label (Metadata Check)** — beantwortet: „Steckt schon eine KI-Kennzeichnung drin?" Liest XMP/EXIF/IPTC aus einer Datei und erkennt vorhandene C2PA-Manifeste (nur Erkennung; Signieren erfordert ein Zertifikat und ist für v2 geplant).
-
-## Lizenzen & rechtlicher Hinweis
-
-Die EU-Icons sind die [offiziellen Icons der EU-Kommission](https://digital-strategy.ec.europa.eu/en/policies/eu-icons-labelling-ai-generated-content) — frei nutzbar, ohne Namensnennung. Schrift: DejaVu Sans (freie Lizenz).
-
-**Dieses Tool ersetzt keine Rechtsberatung.** Die Nutzung der EU-Icons ist freiwillig; die Kennzeichnungspflicht nach Art. 50 EU AI Act verbleibt beim Nutzer bzw. Anbieter.
+- [**uncanny minds GmbH**](https://marketing-ki.de/) — creators of [KI-Label Studio](https://label.marketing-ki.de/KI-Label-Studio.html), the browser tool this node pack's feature set is modeled on.
+- [**comfyui_c2pa_signer**](https://github.com/mikecaronna/comfyui_c2pa_signer) by mikecaronna — reference architecture for ComfyUI content-credential nodes, including the SaveImage-metadata pitfall this repo also documents.
+- **DejaVu Fonts project** (based on Bitstream Vera, designed by Jim Lyles/Bitstream, Inc.) — bundled `DejaVuSans.ttf`, see `assets/fonts/LICENSE-DejaVu.txt`.
+- **European Commission** — official EU AI-labeling icons, bundled under `assets/icons/`.
