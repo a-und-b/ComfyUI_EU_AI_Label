@@ -115,4 +115,4 @@ def test_all_bundled_icons_load():
     for variant in core.ICON_FILES:
         for color in ("black", "white"):
             icon = core.load_icon(variant, color)
-            assert icon.mode == "RGBA" and icon.width == 1200
+            assert icon.mode == "RGBA" and icon.height == 900

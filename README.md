@@ -62,7 +62,7 @@ Answers: *"Is there AI labeling in this file already?"* Input is a **file path**
 
 ## Icon & font licenses
 
-- The EU AI icons are the [official icons published by the European Commission](https://digital-strategy.ec.europa.eu/en/policies/eu-icons-labelling-ai-generated-content) (June 2026). They are **free to use, no attribution required**.
+- The EU AI icons are the [official icons published by the European Commission](https://digital-strategy.ec.europa.eu/en/policies/eu-icons-labelling-ai-generated-content) (June 2026). They are **free to use, no attribution required**. The original SVG sources ship under `assets/icons/svg-source/`; the PNGs the nodes actually load (`assets/icons/*.png`) are pre-rendered from these SVGs at 900px height via `rsvg-convert`, so the node runtime stays Pillow-only (no SVG-rendering dependency, which would drag in a native library like cairo and complicate Windows installs).
 - Bundled font: [DejaVu Sans](https://dejavu-fonts.github.io/) (free license, see `assets/fonts/LICENSE-DejaVu.txt`).
 
 ## Legal disclaimer
