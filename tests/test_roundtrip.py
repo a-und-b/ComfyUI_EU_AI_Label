@@ -141,3 +141,10 @@ def test_load_icon_crops_builtin_padding():
     icon = core.load_icon("AI", "black")
     l, t, r, b = icon.getbbox()
     assert (l, t) == (0, 0) and (r, b) == icon.size
+
+
+def test_jpeg_without_workflow_metadata(tmp_path, base_image):
+    # Regression: empty EXIF passed exif=None, which crashes on Pillow >= 11.
+    path = str(tmp_path / "plain.jpg")
+    core.save_with_metadata(base_image, path, "JPEG", core.build_xmp(**XMP_KW))
+    assert core.inspect_file(path)["ai_labeling_found"] is True

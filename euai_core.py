@@ -231,8 +231,12 @@ def save_with_metadata(img: Image.Image, path: str, fmt: str, xmp: str,
 
     if fmt == "JPEG":
         buf = BytesIO()
-        img.convert("RGB").save(buf, format="JPEG", quality=quality,
-                                exif=exif.tobytes() if len(exif) else None)
+        # Pillow ≥11: `exif=None` crashes in JpegImagePlugin (`len(None)`).
+        # Omit the kwarg when there is no EXIF payload.
+        jpeg_kwargs = {"format": "JPEG", "quality": quality}
+        if len(exif):
+            jpeg_kwargs["exif"] = exif.tobytes()
+        img.convert("RGB").save(buf, **jpeg_kwargs)
         with open(path, "wb") as f:
             f.write(_inject_jpeg_xmp(buf.getvalue(), xmp))
         return
