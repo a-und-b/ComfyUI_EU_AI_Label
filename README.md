@@ -2,8 +2,7 @@
 
 **Label AI-generated images directly in your ComfyUI workflow with the official EU icon and machine-readable metadata, as required by Art. 50 EU AI Act (in force August 2, 2026).**
 
-<img width="2896" height="1084" alt="CleanShot 2026-07-08 at 20 43 56@2x" src="https://github.com/user-attachments/assets/94b59eb2-dcb6-4507-a781-a5ef25ab9bad" />
-
+![Example workflow](example_workflows/eu-ai-label-preview.png)
 
 Inspired by the browser tool [KI-Label Studio](https://label.marketing-ki.de/KI-Label-Studio.html), this node pack brings the same functionality into ComfyUI as the last step of every image generation:
 
@@ -35,7 +34,13 @@ pip install -r ComfyUI_EU_AI_Label/requirements.txt   # Pillow + numpy, usually 
 
 Restart ComfyUI. The nodes appear under the category **EU AI Label**. Works with both the legacy renderer and Nodes 2.0.
 
-An example workflow is included: [example_workflows/eu-ai-label-example.json](example_workflows/eu-ai-label-example.json)
+## Example workflow
+
+1. Copy a sample image into ComfyUI `input/` if needed (the example references `fox.png`).
+2. Load [`example_workflows/eu-ai-label-example.json`](example_workflows/eu-ai-label-example.json) (drag onto the canvas or use **Load**).
+3. Queue the workflow to burn a visible label and write metadata.
+
+Preview: [`example_workflows/eu-ai-label-preview.png`](example_workflows/eu-ai-label-preview.png).
 
 > [!CAUTION]
 > **Do not chain a regular `SaveImage` node after the Metadata Writer.** ComfyUI image tensors cannot carry file metadata, and `SaveImage` writes its own metadata. Your AI labeling metadata would be lost! The **Metadata Writer & Save** node is a save node: it writes the file (with metadata) to your `output/` folder itself. No `SaveImage` needed.
