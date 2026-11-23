@@ -11,6 +11,7 @@ const VISIBLE_WHEN = {
 function applyVisibility(node) {
   const typeWidget = node.widgets?.find((w) => w.name === "label_type");
   if (!typeWidget) return;
+  let changed = false;
   for (const [name, isVisible] of Object.entries(VISIBLE_WHEN)) {
     const w = node.widgets.find((x) => x.name === name);
     if (!w) continue;
@@ -19,8 +20,11 @@ function applyVisibility(node) {
     w.hidden = hide;
     w.options ??= {};
     w.options.hidden = hide;
+    changed = true;
   }
-  node.setSize(node.computeSize());
+  if (!changed) return;
+  // height follows the visible widgets; the width stays as the user (or a workflow) set it
+  node.setSize([node.size[0], node.computeSize()[1]]);
   node.setDirtyCanvas?.(true, true);
 }
 
@@ -43,6 +47,7 @@ app.registerExtension({
     node.onConfigure = function (...args) {
       const r = onConfigure?.apply(this, args);
       applyVisibility(node);
+      if (args[0]?.size) node.setSize(args[0].size); // a saved workflow keeps its layout
       return r;
     };
 

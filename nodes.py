@@ -1,4 +1,4 @@
-"""ComfyUI nodes: EU AI Label (Visible / Metadata Writer & Save / Metadata Check)."""
+"""ComfyUI nodes: AB EU AI Label (visible label), Metadata Save, Metadata Check."""
 
 import json
 import os
@@ -17,7 +17,7 @@ try:
 except Exception:
     _METADATA_DISABLED = False
 
-CATEGORY = "EU AI Label"
+CATEGORY = "AB/Image"
 
 # dropdown value -> internal key
 DST_CHOICES = {
@@ -47,36 +47,35 @@ class EUAILabelVisible:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "image": ("IMAGE", {"display_name": "Images"}),
+                "image": ("IMAGE", {"tooltip": "Images to label (the whole batch)"}),
                 "label_type": (["EU Icon", "Text", "Text + EU Icon", "Custom Logo"],
-                               {"display_name": "Label Type"}),
+                               {"tooltip": "Official EU icon, your text, both, or your own logo"}),
                 "eu_icon_variant": (["AI", "AI generated", "AI modified"],
                                     {"default": "AI generated",
-                                     "display_name": "EU Icon Variant"}),
+                                     "tooltip": "Which EU icon to use"}),
                 "color_variant": (["black", "white"], {"default": "white",
-                                                       "display_name": "Color"}),
+                                                       "tooltip": "Icon and text color; pick the one that contrasts with the image"}),
                 "custom_text": ("STRING", {"default": "AI generated",
-                                           "display_name": "Custom Text"}),
+                                           "tooltip": "Text for the Text label types"}),
                 "size": ("FLOAT", {"default": 7.0, "min": 1.0, "max": 100.0, "step": 0.5,
-                                   "display_name": "Size (%)",
                                    "tooltip": "Label width in % of image width"}),
                 "margin": ("FLOAT", {"default": 3.0, "min": 0.0, "max": 45.0, "step": 0.5,
-                                     "display_name": "Margin (%)",
                                      "tooltip": "Distance to the edge in % of image width"}),
                 "opacity": ("FLOAT", {"default": 100.0, "min": 1.0, "max": 100.0, "step": 1.0,
-                                      "display_name": "Opacity (%)"}),
+                                      "tooltip": "Label opacity in %"}),
                 "position": (core.POSITIONS, {"default": "bottom right",
-                                              "display_name": "Position"}),
+                                              "tooltip": "Where the label sits"}),
             },
             "optional": {
-                "custom_logo": ("IMAGE", {"display_name": "Custom Logo"}),
+                "custom_logo": ("IMAGE", {"tooltip": "Your logo, used with label type Custom Logo"}),
             },
         }
 
     RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("Images",)
+    RETURN_NAMES = ("images",)
     FUNCTION = "apply"
     CATEGORY = CATEGORY
+    SEARCH_ALIASES = ["EU AI Label (Visible)", "ai label", "ai watermark", "ai act", "ki-generiert"]
     DESCRIPTION = ("Composites a visible AI-transparency label (official EU icon, text or "
                    "custom logo) onto every image in the batch — Art. 50 EU AI Act.")
 
@@ -107,44 +106,41 @@ class EUAILabelMetadataSave:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE", {"display_name": "Images"}),
+                "images": ("IMAGE", {"tooltip": "Images to label and save"}),
                 "digital_source_type": (list(DST_CHOICES), {
-                    "display_name": "Digital Source Type",
                     "tooltip": "IPTC DigitalSourceType — the machine-readable AI marker "
                                "read by Google and others"}),
                 "description": ("STRING", {"multiline": True, "default":
                     "Contains AI-generated content — labeled in accordance with "
                     "Art. 50 EU AI Act.",
-                    "display_name": "Description"}),
+                    "tooltip": "Written to dc:description"}),
                 "creator_tool": ("STRING", {"default": "ComfyUI",
-                                            "display_name": "Creator Tool"}),
-                "credit": ("STRING", {"default": "", "display_name": "Credit"}),
+                                            "tooltip": "Written to xmp:CreatorTool"}),
+                "credit": ("STRING", {"default": "", "tooltip": "Optional: written to photoshop:Credit"}),
                 "custom_xmp_fields": ("STRING", {"multiline": True, "default": "",
-                    "display_name": "Custom XMP Fields",
                     "placeholder": "Custom XMP fields: key=value (one per line)",
                     "tooltip": "Optional: one key=value per line "
                                "(e.g. dc:rights=© 2026 Example GmbH)"}),
                 "embed_workflow": ("BOOLEAN", {"default": True,
-                    "display_name": "Embed Workflow",
                     "tooltip": "Embed the ComfyUI workflow/prompt in the file. "
                                "Privacy note: prompts and local paths end up in the image."}),
-                "format": (["PNG", "JPEG", "WebP"], {"display_name": "Format"}),
+                "format": (["PNG", "JPEG", "WebP"], {"tooltip": "File format of the saved images"}),
                 "jpeg_quality": ("INT", {"default": 92, "min": 1, "max": 100,
-                                         "display_name": "Quality (JPEG/WebP)",
-                                         "tooltip": "Quality for JPEG and WebP"}),
+                                         "tooltip": "Quality for JPEG and WebP (1–100)"}),
                 "filename_prefix": ("STRING", {"default": "ComfyUI",
-                                               "display_name": "Filename Prefix"}),
+                                               "tooltip": "Start of the file name; may contain a subfolder"}),
                 "filename_suffix": ("STRING", {"default": "_ai-labeled",
-                                               "display_name": "Filename Suffix"}),
+                                               "tooltip": "Added after the counter, before the extension"}),
             },
             "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
         }
 
     RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("File Path",)
+    RETURN_NAMES = ("file_path",)
     OUTPUT_NODE = True
     FUNCTION = "save"
     CATEGORY = CATEGORY
+    SEARCH_ALIASES = ["EU AI Label (Metadata Writer & Save)", "xmp", "digital source type", "save ai metadata"]
     DESCRIPTION = ("Writes machine-readable AI-labeling metadata (XMP DigitalSourceType etc.) "
                    "and saves the images itself. Do NOT chain a SaveImage node after this — "
                    "it would strip the metadata.")
@@ -191,23 +187,22 @@ class EUAILabelMetadataCheck:
         return {
             "required": {
                 "file_path": ("STRING", {"default": "",
-                    "display_name": "File Path",
                     "tooltip":
                     "Path to the image file. Relative paths are resolved against the "
-                    "ComfyUI output folder. Connect the file_path output of the "
-                    "Metadata Writer here for a round-trip check."}),
+                    "ComfyUI output folder. Connect the file_path output of "
+                    "AB EU AI Label Metadata Save here for a round-trip check."}),
             },
             "optional": {
-                "image": ("IMAGE", {"display_name": "Images",
-                                    "tooltip": "Optional passthrough"}),
+                "image": ("IMAGE", {"tooltip": "Optional passthrough"}),
             },
         }
 
     RETURN_TYPES = ("STRING", "STRING", "IMAGE")
-    RETURN_NAMES = ("Report", "JSON", "Images")
+    RETURN_NAMES = ("report", "json", "images")
     OUTPUT_NODE = True
     FUNCTION = "check"
     CATEGORY = CATEGORY
+    SEARCH_ALIASES = ["EU AI Label (Metadata Check)", "c2pa", "inspect metadata", "read xmp"]
     DESCRIPTION = ("Reads XMP (incl. DigitalSourceType), EXIF and IPTC metadata from a file "
                    "and detects embedded C2PA manifests (detection only, no signing).")
 
@@ -236,9 +231,16 @@ class EUAILabelMetadataCheck:
         path = self._resolve(file_path)
         if not path or not os.path.isfile(path):
             raise FileNotFoundError(
-                f"EU AI Label (Metadata Check): file not found: {path or '(empty)'}")
+                f"AB EU AI Label Metadata Check: file not found: {path or '(empty)'}")
         result = core.inspect_file(path)
-        report = core.build_report(result)
+        # The report is what people copy and screenshot: no local folder names
+        # for files in ComfyUI's own output/input folders. The JSON keeps the full path.
+        shown = path
+        for base in (folder_paths.get_output_directory(), folder_paths.get_input_directory()):
+            if os.path.abspath(path).startswith(os.path.abspath(base) + os.sep):
+                shown = os.path.relpath(path, base)
+                break
+        report = core.build_report({**result, "file": shown})
         print("\n" + report + "\n")
         if image is None:
             image = torch.zeros((1, 1, 1, 3))
@@ -253,7 +255,7 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "EUAILabelVisible": "EU AI Label (Visible)",
-    "EUAILabelMetadataSave": "EU AI Label (Metadata Writer & Save)",
-    "EUAILabelMetadataCheck": "EU AI Label (Metadata Check)",
+    "EUAILabelVisible": "AB EU AI Label",
+    "EUAILabelMetadataSave": "AB EU AI Label Metadata Save",
+    "EUAILabelMetadataCheck": "AB EU AI Label Metadata Check",
 }
